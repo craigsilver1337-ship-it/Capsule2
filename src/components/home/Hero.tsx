@@ -6,7 +6,7 @@ import { useEffect, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import { Lock, Unlock, ArrowRight } from "lucide-react"
-import Image from "next/image"
+// Using native img tag instead of Next.js Image to avoid 500 errors
 import { useRouter } from "next/navigation"
 import Scene from "@/components/three/Scene"
 
@@ -82,7 +82,7 @@ const Hero = () => {
   const gradientVariants = {
     initial: { opacity: 0, scale: 0.8 },
     animate: { 
-      opacity: 0.5, 
+      opacity: 1, 
       scale: 1,
       transition: { 
         duration: 1.2,
@@ -109,65 +109,65 @@ const Hero = () => {
     }
     
   }
-   // Random positions for background images
+   // Random positions for background images - positioned on left and right sides
   const imagePositions = [
-    { top: "10%", left: "15%", rotate: "-10deg", width: 300, height: 300 },
-    { top: "70%", left: "80%", rotate: "15deg", width: 250, height: 250 },
-    { top: "30%", left: "75%", rotate: "5deg", width: 200, height: 200 }
+    { top: "10%", left: "0%", rotate: "-10deg", width: 400, height: 400 }, // Left side, larger
+    { top: "50%", left: "85%", rotate: "15deg", width: 500, height: 500 }, // Right side, larger (main abstract shape)
+    { top: "20%", left: "80%", rotate: "5deg", width: 300, height: 300 }  // Right side, smaller
   ]
 
 
   return (
-    <div className="relative min-h-screen  flex flex-col items-center justify-center overflow-hidden pt-20">
+    <div className="relative min-h-screen flex flex-col items-center justify-center overflow-x-hidden overflow-y-auto pt-20 bg-black">
       {/* Three.js Background */}
       
-     <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 3 }}
-      className="absolute inset-0"
-    >
+     <div className="absolute inset-0 z-0">
       <Scene />
-    </motion.div>
+    </div>
       
       
-     {[
+      {[
         "https://cdn.multiversx.com/webflow/Hero%20section%20background.webp",
         "https://cdn.multiversx.com/webflow/Home-Hero-Bg-03.webp",
         "https://cdn.multiversx.com/webflow/Glass%20shield%404-1080x1080%201.webp"
       ].map((src, index) => (
         <motion.div
           key={src}
-          className="absolute"
+          className="absolute z-[1] pointer-events-none"
           style={{
             top: imagePositions[index].top,
             left: imagePositions[index].left,
             transform: `rotate(${imagePositions[index].rotate})`
           }}
           initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 0.3, scale: 1 }}
+          animate={{ opacity: index === 1 ? 0.8 : 0.5, scale: 1 }}
           transition={{ duration: 1, delay: index * 0.2 }}
         >
-          <Image
+          <img
             src={src}
             alt={`Hero Background ${index + 1}`}
             width={imagePositions[index].width}
             height={imagePositions[index].height}
             className="object-contain"
-            priority={index === 0} // Prioritize first image for faster loading
+            style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
+            onError={(e) => {
+              // Silently handle image loading errors - hide the image
+              const target = e.target as HTMLImageElement;
+              target.style.display = 'none';
+            }}
           />
         </motion.div>
       ))}
       {/* Gradient Overlays with Animation */}
-      <div className="absolute inset-0">
+      <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
         <motion.div 
-          className="absolute top-1/4 left-1/4 w-96 h-96 gradient-blur"
+          className="absolute top-0 left-0 w-[800px] h-[800px] -translate-x-1/4 -translate-y-1/4 gradient-blur"
           variants={gradientVariants}
           initial="initial"
           animate="animate"
         />
         <motion.div 
-          className="absolute bottom-1/4 right-1/4 w-96 h-96 gradient-blur"
+          className="absolute bottom-0 right-0 w-[800px] h-[800px] translate-x-1/4 translate-y-1/4 gradient-blur"
           variants={gradientVariants}
           initial="initial"
           animate="animate"
@@ -175,7 +175,7 @@ const Hero = () => {
         />
       </div>
       
-      <div className="container mx-auto px-4 z-10 text-center">
+      <div className="container mx-auto px-4 z-10 text-center relative max-w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -232,7 +232,7 @@ const Hero = () => {
           initial={{ opacity: 0, scale: 0.8, y: 30 }}
           animate={{ opacity: 1, scale: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8, ease: "easeOut" }}
-          className="relative mx-auto"
+          className="relative mx-auto z-10"
         >
           <div className="relative mx-auto w-full max-w-md aspect-[1/1.2] bg-black rounded-2xl p-1 group hover:scale-105 transition-transform duration-500">
             <motion.div 
@@ -322,9 +322,9 @@ const Hero = () => {
                       initial="initial"
                       animate="animate"
                       whileHover="hover"
-                      className="  sm:absolute bottom-1/2 left-[150px] transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md  group"
+                      className="hidden sm:block absolute top-20 left-10 w-full max-w-xs group z-20"
                     >
-                      <div className=" relative bg-black/50 backdrop-blur-sm border border-cyan-500/20 rounded-2xl p-8 h-full">
+                      <div className="relative bg-black/50 backdrop-blur-sm border border-cyan-500/20 rounded-2xl p-8">
                         {/* Glow Effect */}
                         <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                         
@@ -349,9 +349,9 @@ const Hero = () => {
                         animate="animate"
                         whileHover="hover"
                         transition={{ delay: 0.1 }}
-                        className="  absolute bottom-[25%] left-[130px] transform -translate-x-1/2 -translate-y-1/3  w-full max-w-md  group"
+                        className="hidden sm:block absolute bottom-20 left-4 lg:left-10 w-full max-w-xs group z-20"
                       >
-                        <div className="relative bg-black/50 backdrop-blur-sm border border-cyan-500/20 rounded-2xl p-8 h-full">
+                        <div className="relative bg-black/50 backdrop-blur-sm border border-cyan-500/20 rounded-2xl p-8">
                           {/* Glow Effect */}
                           <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                           
@@ -378,9 +378,9 @@ const Hero = () => {
             animate="animate"
             whileHover="hover"
             transition={{ delay: 0.2 }}
-            className="absolute bottom-1/2 right-[-300px] transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md  group"
+            className="hidden lg:block absolute top-20 right-4 lg:right-10 w-full max-w-xs group z-20"
           >
-            <div className="relative bg-black/50 backdrop-blur-sm border border-cyan-500/20 rounded-2xl p-8 h-full">
+            <div className="relative bg-black/50 backdrop-blur-sm border border-cyan-500/20 rounded-2xl p-8">
               {/* Glow Effect */}
               <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
@@ -402,7 +402,7 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
-          className="absolute bottom-[25%] right-[-300px] transform -translate-x-1/2 -translate-y-1/2 w-full max-w-md  group"
+          className="hidden lg:block absolute bottom-20 right-4 lg:right-10 group z-20"
         >
           <div className="relative group">
             <div className="relative bg-black/50 backdrop-blur-sm border border-green-500/30 rounded-full px-8 py-4 flex items-center space-x-4">

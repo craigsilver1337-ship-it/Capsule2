@@ -16,13 +16,15 @@ export default function FloatingCapsule() {
 
   return (
     <Capsule ref={capsuleRef} args={[0.5, 1, 32]}>
-{/* @ts-ignore */}
+      {/* @ts-ignore */}
       <meshStandardMaterial
         color="#00ffff"
-        metalness={0.8}
-        roughness={0.2}
-        emissive="#003333"
-        emissiveIntensity={0.5}
+        metalness={0.9}
+        roughness={0.1}
+        emissive="#00aaff"
+        emissiveIntensity={1.2}
+        transparent={true}
+        opacity={0.95}
       />
     </Capsule>
   )
