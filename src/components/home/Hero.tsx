@@ -109,34 +109,32 @@ const Hero = () => {
     }
     
   }
-   // Random positions for background images - positioned on left and right sides
+   // Background images positions - using pixel values to match screenshot layout
   const imagePositions = [
-    { top: "10%", left: "0%", rotate: "-10deg", width: 400, height: 400 }, // Left side, larger
-    { top: "50%", left: "85%", rotate: "15deg", width: 500, height: 500 }, // Right side, larger (main abstract shape)
-    { top: "20%", left: "80%", rotate: "5deg", width: 300, height: 300 }  // Right side, smaller
+    { top: 50, left: 50, rotate: "-10deg", width: 400, height: 400 }, // Top-left: blurry oval
+    { bottom: 100, right: 100, rotate: "15deg", width: 500, height: 500 }, // Bottom-right: large ring behind Carbon Neutral
+    { top: 100, right: 100, rotate: "5deg", width: 300, height: 300 }  // Top-right: ring above Validator Nodes
   ]
 
 
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center overflow-x-hidden overflow-y-auto pt-20 bg-black">
-      {/* Three.js Background */}
-      
-     <div className="absolute inset-0 z-0">
+      {/* 3D Capsule Scene */}
       <Scene />
-    </div>
-      
-      
+      {/* Background images */}
       {[
         "https://cdn.multiversx.com/webflow/Hero%20section%20background.webp",
         "https://cdn.multiversx.com/webflow/Home-Hero-Bg-03.webp",
         "https://cdn.multiversx.com/webflow/Glass%20shield%404-1080x1080%201.webp"
       ].map((src, index) => (
         <motion.div
-          key={src}
+          key={`${src}-${index}`}
           className="absolute z-[1] pointer-events-none"
           style={{
-            top: imagePositions[index].top,
-            left: imagePositions[index].left,
+            ...(imagePositions[index].top !== undefined ? { top: `${imagePositions[index].top}px` } : {}),
+            ...(imagePositions[index].left !== undefined ? { left: `${imagePositions[index].left}px` } : {}),
+            ...(imagePositions[index].right !== undefined ? { right: `${imagePositions[index].right}px` } : {}),
+            ...(imagePositions[index].bottom !== undefined ? { bottom: `${imagePositions[index].bottom}px` } : {}),
             transform: `rotate(${imagePositions[index].rotate})`
           }}
           initial={{ opacity: 0, scale: 0.8 }}
@@ -149,7 +147,7 @@ const Hero = () => {
             width={imagePositions[index].width}
             height={imagePositions[index].height}
             className="object-contain"
-            style={{ width: 'auto', height: 'auto', maxWidth: '100%' }}
+            style={{ flexShrink: 0, height: 'auto' }}
             onError={(e) => {
               // Silently handle image loading errors - hide the image
               const target = e.target as HTMLImageElement;
@@ -158,22 +156,6 @@ const Hero = () => {
           />
         </motion.div>
       ))}
-      {/* Gradient Overlays with Animation */}
-      <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
-        <motion.div 
-          className="absolute top-0 left-0 w-[800px] h-[800px] -translate-x-1/4 -translate-y-1/4 gradient-blur"
-          variants={gradientVariants}
-          initial="initial"
-          animate="animate"
-        />
-        <motion.div 
-          className="absolute bottom-0 right-0 w-[800px] h-[800px] translate-x-1/4 translate-y-1/4 gradient-blur"
-          variants={gradientVariants}
-          initial="initial"
-          animate="animate"
-          transition={{ delay: 0.3 }}
-        />
-      </div>
       
       <div className="container mx-auto px-4 z-10 text-center relative max-w-full">
         <motion.div
@@ -322,7 +304,8 @@ const Hero = () => {
                       initial="initial"
                       animate="animate"
                       whileHover="hover"
-                      className="hidden sm:block absolute top-20 left-10 w-full max-w-xs group z-20"
+                      className="hidden sm:block absolute w-full max-w-xs group z-20"
+                      style={{ top: '80px', left: '40px' }}
                     >
                       <div className="relative bg-black/50 backdrop-blur-sm border border-cyan-500/20 rounded-2xl p-8">
                         {/* Glow Effect */}
@@ -349,7 +332,8 @@ const Hero = () => {
                         animate="animate"
                         whileHover="hover"
                         transition={{ delay: 0.1 }}
-                        className="hidden sm:block absolute bottom-20 left-4 lg:left-10 w-full max-w-xs group z-20"
+                        className="hidden sm:block absolute w-full max-w-xs group z-20"
+                        style={{ top: '200px', left: '40px' }}
                       >
                         <div className="relative bg-black/50 backdrop-blur-sm border border-cyan-500/20 rounded-2xl p-8">
                           {/* Glow Effect */}
@@ -378,7 +362,8 @@ const Hero = () => {
             animate="animate"
             whileHover="hover"
             transition={{ delay: 0.2 }}
-            className="hidden lg:block absolute top-20 right-4 lg:right-10 w-full max-w-xs group z-20"
+            className="hidden lg:block absolute w-full max-w-xs group z-20"
+            style={{ top: '80px', right: '40px' }}
           >
             <div className="relative bg-black/50 backdrop-blur-sm border border-cyan-500/20 rounded-2xl p-8">
               {/* Glow Effect */}
@@ -402,23 +387,24 @@ const Hero = () => {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5, duration: 0.8 }}
-          className="hidden lg:block absolute bottom-20 right-4 lg:right-10 group z-20"
+          className="hidden lg:block absolute group z-20"
+          style={{ bottom: '80px', right: '40px' }}
         >
           <div className="relative group">
-            <div className="relative bg-black/50 backdrop-blur-sm border border-green-500/30 rounded-full px-8 py-4 flex items-center space-x-4">
+            <div className="relative bg-black/50 backdrop-blur-sm border border-green-500/30 rounded-2xl px-6 py-4 flex items-center justify-between gap-6">
               {/* Glow Effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-cyan-500/10 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              <div className="absolute inset-0 bg-gradient-to-r from-green-500/10 to-cyan-500/10 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
               
-              <div className="relative z-10 flex items-center space-x-4">
-                <div className="text-gray-400 text-sm">
+              <div className="relative z-10 flex items-center gap-6 flex-1">
+                <div className="text-gray-400 text-sm whitespace-nowrap">
                   Efficient. Scalable. Global.
                 </div>
-                <div className="text-2xl font-bold text-green-400">
+                <div className="text-2xl font-bold text-green-400 whitespace-nowrap">
                   Carbon Neutral
                 </div>
                 <motion.div
                   whileHover={{ scale: 1.05 }}
-                  className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-medium border border-green-500/30 cursor-pointer hover:bg-green-500/30 transition-colors"
+                  className="bg-green-500/20 text-green-400 px-3 py-1 rounded-full text-sm font-medium border border-green-500/30 cursor-pointer hover:bg-green-500/30 transition-colors whitespace-nowrap ml-auto"
                 >
                   Sustainability 
                 </motion.div>
