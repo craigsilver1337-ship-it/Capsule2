@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { readContract } from '@wagmi/core';
+import { readContract } from 'wagmi';
 import { config } from '@/lib/config';
 import contractABI from '@/lib/contractutils.json';
 import contractAddress from '@/lib/contractAddress.json';
