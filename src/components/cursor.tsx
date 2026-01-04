@@ -21,7 +21,7 @@ const CyanCursor: React.FC = () => {
     const handleMouseMove = (e: MouseEvent) => {
       mouseX = e.clientX;
       mouseY = e.clientY;
-      
+
       // Instant positioning for the dot
       cursorDot.style.left = `${mouseX}px`;
       cursorDot.style.top = `${mouseY}px`;
@@ -29,13 +29,31 @@ const CyanCursor: React.FC = () => {
 
     const animateCursor = () => {
       // Smooth following animation for the main cursor
-      const speed = 0.15;
-      cursorX += (mouseX - cursorX) * speed;
-      cursorY += (mouseY - cursorY) * speed;
-      
+      const speed = 0.2;
+      let nextX = cursorX + (mouseX - cursorX) * speed;
+      let nextY = cursorY + (mouseY - cursorY) * speed;
+
+      // Leash logic: constrain the distance between ring and dot (mouse)
+      const dx = mouseX - nextX;
+      const dy = mouseY - nextY;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxDist = 12; // Ring radius is roughly 16px, so 12px keeps dot inside
+
+      if (dist > maxDist) {
+        const angle = Math.atan2(dy, dx);
+        nextX = mouseX - Math.cos(angle) * maxDist;
+        nextY = mouseY - Math.sin(angle) * maxDist;
+        // Also update cursorX/Y to prevent 'snapping' back when mouse stops
+        cursorX = nextX;
+        cursorY = nextY;
+      } else {
+        cursorX = nextX;
+        cursorY = nextY;
+      }
+
       cursor.style.left = `${cursorX}px`;
       cursor.style.top = `${cursorY}px`;
-      
+
       requestAnimationFrame(animateCursor);
     };
 
@@ -117,7 +135,7 @@ const CyanCursor: React.FC = () => {
           transform: 'translate(-50%, -50%)',
         }}
       />
-      
+
       {/* Cursor dot */}
       <div
         ref={cursorDotRef}

@@ -8,6 +8,14 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Providers from "@/app/providers";
 import Header from "@/components/layout/Header";
 
+import { Dancing_Script } from "next/font/google";
+
+const dancingScript = Dancing_Script({
+  subsets: ["latin"],
+  variable: "--font-dancing",
+  display: "swap",
+});
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -31,19 +39,19 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} ${dancingScript.variable} antialiased`}
       >
-      
-          <Providers>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem={false}>
+
+        <Providers>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem={false}>
             <Header />
             {children}
-              <CyanCursor />
-          <Footer />
-           </ThemeProvider>
-          </Providers>
-        
-       
+            <CyanCursor />
+            <Footer />
+          </ThemeProvider>
+        </Providers>
+
+
       </body>
     </html>
   );

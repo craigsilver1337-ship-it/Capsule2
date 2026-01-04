@@ -30,7 +30,7 @@ export default function Scene() {
   return (
     <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
       <Canvas
-        gl={{ 
+        gl={{
           antialias: true,
           alpha: true,
           preserveDrawingBuffer: false,
@@ -45,7 +45,7 @@ export default function Scene() {
         onCreated={({ gl }) => {
           // Set clear color to transparent
           gl.setClearColor(0x000000, 0)
-          
+
           const handleContextLost = (event: Event) => {
             event.preventDefault();
             setContextLost(true);
@@ -54,16 +54,16 @@ export default function Scene() {
               setContextLost(false);
             }, 1000);
           };
-          
+
           const handleContextRestored = () => {
             // Force re-render when context is restored
             gl.setClearColor(0x000000, 0);
             setContextLost(false);
           };
-          
+
           gl.domElement.addEventListener('webglcontextlost', handleContextLost);
           gl.domElement.addEventListener('webglcontextrestored', handleContextRestored);
-          
+
           return () => {
             gl.domElement.removeEventListener('webglcontextlost', handleContextLost);
             gl.domElement.removeEventListener('webglcontextrestored', handleContextRestored);
@@ -74,9 +74,9 @@ export default function Scene() {
         <OrbitControls enableZoom={false} enablePan={false} />
         {/* @ts-ignore */}
         <ambientLight intensity={0.8} />
-         {/* @ts-ignore */}
+        {/* @ts-ignore */}
         <pointLight position={[10, 10, 10]} intensity={1.5} />
-         {/* @ts-ignore */}
+        {/* @ts-ignore */}
         <pointLight position={[-10, -10, 10]} intensity={0.8} />
         <FloatingCapsule />
         <Environment preset="night" />

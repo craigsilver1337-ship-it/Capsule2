@@ -7,7 +7,7 @@ import * as THREE from 'three'
 
 export default function FloatingCapsule() {
   const capsuleRef = useRef<THREE.Mesh>(null)
-  
+
   useFrame((state) => {
     if (!capsuleRef.current) return
     capsuleRef.current.rotation.x = Math.sin(state.clock.elapsedTime) * 0.1
@@ -19,13 +19,13 @@ export default function FloatingCapsule() {
     <Capsule ref={capsuleRef} args={[0.5, 1, 32]}>
       {/* @ts-ignore */}
       <meshStandardMaterial
-        color="#00ffff"
+        color="#0088aa"
         metalness={0.9}
-        roughness={0.1}
-        emissive="#00aaff"
-        emissiveIntensity={1.2}
+        roughness={0.15}
+        emissive="#002233"
+        emissiveIntensity={0.3}
         transparent={true}
-        opacity={0.95}
+        opacity={0.9}
       />
     </Capsule>
   )
